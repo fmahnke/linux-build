@@ -87,9 +87,9 @@ cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 sed -i 's|CheckSpace|#CheckSpace|' "$DEST/etc/pacman.conf"
 
 cat >> "$DEST/etc/pacman.conf" <<EOF
-[pine64-mainline]
+[alarmpine64]
 SigLevel = Never
-Server = https://github.com/anarsoul/PKGBUILDs/releases/download/mainline/
+Server = https://p64.arikawa-hi.me/aarch64/
 EOF
 
 cat > "$DEST/second-phase" <<EOF
@@ -100,15 +100,14 @@ killall -KILL gpg-agent
 pacman -Sy --noconfirm
 pacman -Rsn --noconfirm linux-aarch64
 pacman -S --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant alsa-utils \
-	pv linux-pine64 linux-pine64-headers networkmanager dkms-rtl8723cs uboot-pine64-git \
-	rtl8723bt-firmware
+	pv linux-pine64 linux-pine64-headers networkmanager uboot-pine64-git \
+	rtl8723bt-firmware mesa-git
 
 # Install XFCE
-pacman -S --noconfirm xfce4 xorg-server xf86-input-libinput lxdm ttf-dejavu ttf-liberation firefox  \
+pacman -S --noconfirm lxqt xorg-server xf86-input-libinput lxdm ttf-dejavu ttf-liberation firefox  \
       		pulseaudio nm-connection-editor network-manager-applet \
-      		xfce4-pulseaudio-plugin \
 		blueman pulseaudio-bluetooth \
-      		pulseaudio-alsa pavucontrol
+      		pulseaudio-alsa pavucontrol-qt
 systemctl enable lxdm
 systemctl enable NetworkManager
 systemctl enable bluetooth
@@ -133,12 +132,10 @@ rm "$DEST/usr/bin/qemu-arm-static"
 rm -f "$DEST"/*.core
 mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 
-cp $OTHERDIR/asound.state $DEST/var/lib/alsa
 cp $OTHERDIR/resize_rootfs.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/modesetting.conf $DEST/etc/X11/xorg.conf.d/
 cp $OTHERDIR/sysrq.conf $DEST/etc/sysctl.d/
 cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
-cp $OTHERDIR/8723cs.conf $DEST/etc/modprobe.d/
 # Probing gdk pixbuf modules fails on qemu with:
 # (process:30790): GLib-ERROR **: 20:53:40.468: getauxval () failed: No such file or directory
 # qemu: uncaught target signal 5 (Trace/breakpoint trap) - core dumped
