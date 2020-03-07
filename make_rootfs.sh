@@ -87,10 +87,13 @@ cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 sed -i 's|CheckSpace|#CheckSpace|' "$DEST/etc/pacman.conf"
 
 cat >> "$DEST/etc/pacman.conf" <<EOF
-[alarmpine64]
+[pine64]
 SigLevel = Never
 Server = https://p64.arikawa-hi.me/aarch64/
 EOF
+
+# USB Network Interface, perfect for SSH.
+cp $OTHERDIR/usb-network.service $DEST/etc/systemd/system/
 
 cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
@@ -99,18 +102,12 @@ pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
 pacman -Sy --noconfirm
 pacman -Rsn --noconfirm linux-aarch64
-pacman -S --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant alsa-utils \
-	pv linux-pine64 linux-pine64-headers networkmanager uboot-pine64-git \
-	rtl8723bt-firmware mesa-git
+pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant \
+	alsa-utils pv linux-pine64 linux-pine64-headers networkmanager uboot-pinephone \
+	rtl8723bt-firmware
 
-# Install XFCE
-pacman -S --noconfirm lxqt xorg-server xf86-input-libinput lxdm ttf-dejavu ttf-liberation firefox  \
-      		pulseaudio nm-connection-editor network-manager-applet \
-		blueman pulseaudio-bluetooth \
-      		pulseaudio-alsa pavucontrol-qt
-systemctl enable lxdm
+systemctl enable usb-network
 systemctl enable NetworkManager
-systemctl enable bluetooth
 usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill alarm
 
 sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
@@ -133,13 +130,13 @@ rm -f "$DEST"/*.core
 mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 
 cp $OTHERDIR/resize_rootfs.sh $DEST/usr/local/sbin/
-cp $OTHERDIR/modesetting.conf $DEST/etc/X11/xorg.conf.d/
 cp $OTHERDIR/sysrq.conf $DEST/etc/sysctl.d/
 cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
+mkdir -p $DEST/usr/lib/danctnix && cp $OTHERDIR/setup_configfs.sh $DEST/usr/lib/danctnix/
 # Probing gdk pixbuf modules fails on qemu with:
 # (process:30790): GLib-ERROR **: 20:53:40.468: getauxval () failed: No such file or directory
 # qemu: uncaught target signal 5 (Trace/breakpoint trap) - core dumped
-cp $OTHERDIR/loaders.cache $DEST//usr/lib/gdk-pixbuf-2.0/2.10.0/
+#cp $OTHERDIR/loaders.cache $DEST//usr/lib/gdk-pixbuf-2.0/2.10.0/
 
 echo "Installed rootfs to $DEST"
 
