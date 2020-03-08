@@ -74,3 +74,4 @@ setup_usb_network_configfs() {
 # And we go.
 setup_usb_network_configfs
 ip address add 172.16.42.1/24 dev usb0
+ip link set usb0 up
