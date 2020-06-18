@@ -32,7 +32,7 @@ echo "Mounting rootfs"
 mount ${LOOP_DEVICE}p3 $TEMP_ROOT
 
 echo "Unpacking rootfs archive"
-bsdtar -xpf "$TARBALL" -C "$TEMP_ROOT"
+bsdtar -xpf "$TARBALL" -C "$TEMP_ROOT" || true
 
 echo "Installing bootloader"
 dd if=$TEMP_ROOT/boot/$BOOTLOADER of=${LOOP_DEVICE} bs=8k seek=1

@@ -92,9 +92,6 @@ SigLevel = Never
 Server = https://p64.arikawa-hi.me/aarch64/
 EOF
 
-# USB Network Interface, perfect for SSH.
-cp $OTHERDIR/usb-network.service $DEST/etc/systemd/system/
-
 cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 pacman-key --init
@@ -104,9 +101,10 @@ pacman -Sy --noconfirm
 pacman -Rsn --noconfirm linux-aarch64
 pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant \
 	alsa-utils pv linux-pine64 linux-pine64-headers networkmanager uboot-pinephone \
-	rtl8723bt-firmware
+	rtl8723bt-firmware danctnix-usb-tethering dhcp
 
-systemctl enable usb-network
+systemctl enable usb-tethering
+systemctl enable dhcpd4
 systemctl enable NetworkManager
 usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill alarm
 
@@ -132,11 +130,13 @@ mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 cp $OTHERDIR/resize_rootfs.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/sysrq.conf $DEST/etc/sysctl.d/
 cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
-mkdir -p $DEST/usr/lib/danctnix && cp $OTHERDIR/setup_configfs.sh $DEST/usr/lib/danctnix/
 # Probing gdk pixbuf modules fails on qemu with:
 # (process:30790): GLib-ERROR **: 20:53:40.468: getauxval () failed: No such file or directory
 # qemu: uncaught target signal 5 (Trace/breakpoint trap) - core dumped
 #cp $OTHERDIR/loaders.cache $DEST//usr/lib/gdk-pixbuf-2.0/2.10.0/
+
+# Shiny MOTD
+cp $OTHERDIR/motd $DEST/etc/motd
 
 echo "Installed rootfs to $DEST"
 
