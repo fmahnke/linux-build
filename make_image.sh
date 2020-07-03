@@ -22,14 +22,13 @@ LOOP_DEVICE=$(losetup -f)
 losetup -P $LOOP_DEVICE $IMAGE_NAME
 
 echo "Creating filesystems"
-mkfs.vfat ${LOOP_DEVICE}p1
-mkswap ${LOOP_DEVICE}p2
-mkfs.ext4 ${LOOP_DEVICE}p3
+mkswap ${LOOP_DEVICE}p1
+mkfs.ext4 ${LOOP_DEVICE}p2
 
 TEMP_ROOT=$(mktemp -d)
 mkdir -p $TEMP_ROOT
 echo "Mounting rootfs"
-mount ${LOOP_DEVICE}p3 $TEMP_ROOT
+mount ${LOOP_DEVICE}p2 $TEMP_ROOT
 
 echo "Unpacking rootfs archive"
 bsdtar -xpf "$TARBALL" -C "$TEMP_ROOT" || true

@@ -4,8 +4,7 @@ set -x
 set -e
 
 IMAGE_NAME="$1"
-IMAGE_SIZE=5000M
-FAT_SIZE=100 #M
+IMAGE_SIZE=7000M
 SWAP_SIZE=2048 # M
 
 if [ -z "$IMAGE_NAME" ]; then
@@ -26,26 +25,18 @@ n
 p
 1
 2048
-+${FAT_SIZE}M
-t
-c
-n
-p
-2
-$((2048+FAT_SIZE*1024*2))
 +${SWAP_SIZE}M
 t
-2
 82
 n
 p
-3
-$((2048+FAT_SIZE*1024*2+SWAP_SIZE*1024*2))
+2
+$((2048+SWAP_SIZE*1024*2))
 
 t
-3
+2
 83
 a
-3
+2
 w
 EOF

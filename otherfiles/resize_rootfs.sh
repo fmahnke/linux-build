@@ -9,8 +9,8 @@ fi
 
 set -x
 
-DEVICE="/dev/mmcblk0"
-PART="3"
+DEVICE=$(df -P $0 | tail -1 | cut -d' ' -f 1 | sed 's/..$//')
+PART="2"
 
 resize() {
 	start=$(fdisk -l ${DEVICE} | grep ${DEVICE}p${PART} | sed 's/*//' | awk '{print $2}')
@@ -20,14 +20,14 @@ resize() {
 	fdisk ${DEVICE} <<EOF
 p
 d
-3
+2
 n
 p
-3
+2
 $start
 
 a
-3
+2
 w
 EOF
 	set -e
@@ -37,5 +37,9 @@ EOF
 }
 
 resize
+
+if [ -f /usr/lib/systemd/system/multi-user.target.wants/resize_rootfs.service ]; then
+	rm /usr/lib/systemd/system/multi-user.target.wants/resize_rootfs.service
+fi
 
 echo "Done!"
