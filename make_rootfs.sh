@@ -103,15 +103,14 @@ pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
 pacman -Sy --noconfirm
 pacman -Rsn --noconfirm linux-aarch64
-pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant \
-	alsa-ucm-pinephone alsa-utils pv linux-pine64 networkmanager uboot-pinephone bootsplash-theme-danctnix \
-	rtl8723bt-firmware danctnix-usb-tethering danctnix-eg25-misc dhcp
+pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix danctnix-usb-tethering dhcp
 
-pacman -S --noconfirm --disable-download-timeout --needed gtk3-mobile mesa-git feedbackd calls chatty phoc phosh kgx \
-	squeekboard lollypop gedit gnome-clocks gnome-software-mobile sound-theme-librem5 epiphany gnome-control-center-mobile \
-	gnome-keyring purple-matrix gnome-contacts
+pacman -S --noconfirm --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta
 
 systemctl disable sshd
+
+systemctl disable systemd-networkd
+systemctl disable systemd-resolved
 
 systemctl enable usb-tethering
 systemctl enable dhcpd4
@@ -143,41 +142,28 @@ rm $DEST/change-alarm
 rm "$DEST/usr/bin/qemu-aarch64-static"
 rm "$DEST/usr/bin/qemu-arm-static"
 rm -f "$DEST"/*.core
-mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
+rm "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
+touch "$DEST/etc/resolv.conf"
 
 cp $OTHERDIR/resize_rootfs.sh $DEST/usr/local/sbin/
+cp $OTHERDIR/first_time_setup.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
 # Probing gdk pixbuf modules fails on qemu with:
 # (process:30790): GLib-ERROR **: 20:53:40.468: getauxval () failed: No such file or directory
 # qemu: uncaught target signal 5 (Trace/breakpoint trap) - core dumped
 #cp $OTHERDIR/loaders.cache $DEST//usr/lib/gdk-pixbuf-2.0/2.10.0/
 
-# Hide some weird apps that we don't care
-mkdir -p $DEST/usr/share/danctnix/applications
-cp $OTHERDIR/hidden-apps/* $DEST/usr/share/danctnix/applications/
-cp $OTHERDIR/profile.d/danctnix.sh $DEST/etc/profile.d/
-
 cp -r $OTHERDIR/systemd/* $DEST/usr/lib/systemd/system/
 
 mkdir -p $DEST/etc/gtk-3.0
 cp $OTHERDIR/gtk3-settings.ini $DEST/etc/gtk-3.0/settings.ini
 
-mkdir -p $DEST/usr/share/glib-2.0/schemas
-cp $OTHERDIR/000-archmobile.gschema.override $DEST/usr/share/glib-2.0/schemas
-cp $OTHERDIR/osk-wayland $DEST/usr/bin/
-cp $OTHERDIR/profile.d/gtk-qt-tweaks.sh $DEST/etc/profile.d/
 do_chroot /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
 
 # Replace Arch's with our own mkinitcpio
 rm $DEST/etc/mkinitcpio.conf
 cp $OTHERDIR/mkinitcpio.conf $DEST/etc/mkinitcpio.conf
 do_chroot mkinitcpio -p linux-pine64 || true
-
-cp $OTHERDIR/adwaita-phone.jpg $DEST/usr/share/danctnix
-
-# TODO: probably build for pinetab
-# Maybe a first time script that detects if the system model is X and set this?
-echo "CHASSIS=\"handset\"" > $DEST/etc/machine-info
 
 # Shiny MOTD
 cp $OTHERDIR/motd $DEST/etc/motd

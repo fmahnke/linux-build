@@ -4,7 +4,7 @@ set -x
 set -e
 
 IMAGE_NAME="$1"
-IMAGE_SIZE=7000M
+IMAGE_SIZE=6000M
 SWAP_SIZE=2048 # M
 
 if [ -z "$IMAGE_NAME" ]; then
