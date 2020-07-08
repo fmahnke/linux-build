@@ -103,11 +103,7 @@ pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
 pacman -Sy --noconfirm
 pacman -Rsn --noconfirm linux-aarch64
-pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix danctnix-usb-tethering dhcp
-
-pacman -S --noconfirm --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta
-
-systemctl disable sshd
+pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone danctnix-usb-tethering dhcp
 
 systemctl disable systemd-networkd
 systemctl disable systemd-resolved
@@ -119,7 +115,6 @@ systemctl enable bluetooth
 systemctl enable eg25_power
 systemctl enable eg25_audio_routing
 systemctl enable ModemManager
-systemctl enable phosh
 usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill alarm
 
 sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
@@ -154,16 +149,6 @@ cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
 #cp $OTHERDIR/loaders.cache $DEST//usr/lib/gdk-pixbuf-2.0/2.10.0/
 
 cp -r $OTHERDIR/systemd/* $DEST/usr/lib/systemd/system/
-
-mkdir -p $DEST/etc/gtk-3.0
-cp $OTHERDIR/gtk3-settings.ini $DEST/etc/gtk-3.0/settings.ini
-
-do_chroot /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
-
-# Replace Arch's with our own mkinitcpio
-rm $DEST/etc/mkinitcpio.conf
-cp $OTHERDIR/mkinitcpio.conf $DEST/etc/mkinitcpio.conf
-do_chroot mkinitcpio -p linux-pine64 || true
 
 # Shiny MOTD
 cp $OTHERDIR/motd $DEST/etc/motd
