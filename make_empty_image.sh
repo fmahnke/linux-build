@@ -4,8 +4,7 @@ set -x
 set -e
 
 IMAGE_NAME="$1"
-IMAGE_SIZE=6000M
-SWAP_SIZE=2048 # M
+IMAGE_SIZE=4096M
 
 if [ -z "$IMAGE_NAME" ]; then
 	echo "Usage: $0 <image name>"
@@ -25,18 +24,9 @@ n
 p
 1
 2048
-+${SWAP_SIZE}M
-t
-82
-n
-p
-2
-$((2048+SWAP_SIZE*1024*2))
 
 t
-2
 83
 a
-2
 w
 EOF
