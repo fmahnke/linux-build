@@ -105,7 +105,9 @@ pacman -Sy --noconfirm
 pacman -Rsn --noconfirm linux-aarch64
 pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix danctnix-usb-tethering dhcp
 
-pacman -S --noconfirm --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta
+pacman -S --noconfirm --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight
+
+pacman -S --noconfirm --disable-download-timeout --needed lollypop gedit evince-mobile epiphany gnome-clocks purple-matrix purple-telegram
 
 systemctl disable sshd
 
@@ -153,7 +155,7 @@ cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
 # qemu: uncaught target signal 5 (Trace/breakpoint trap) - core dumped
 #cp $OTHERDIR/loaders.cache $DEST//usr/lib/gdk-pixbuf-2.0/2.10.0/
 
-cp -r $OTHERDIR/systemd/* $DEST/usr/lib/systemd/system/
+cp -r $OTHERDIR/systemd/* $DEST/usr/lib/systemd/
 
 mkdir -p $DEST/etc/gtk-3.0
 cp $OTHERDIR/gtk3-settings.ini $DEST/etc/gtk-3.0/settings.ini
