@@ -87,18 +87,20 @@ cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 
 cat $OTHERDIR/pacman.conf > "$DEST/etc/pacman.conf"
 
+cp $OTHERDIR/locale.gen "$DEST/etc/locale.gen-all"
+
 cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 pacman-key --init
 pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
-pacman -Sy --noconfirm
+pacman -Syu --noconfirm
 pacman -Rsn --noconfirm linux-aarch64
-pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix danctnix-usb-tethering dhcp
+pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix danctnix-usb-tethering dhcp v4l-utils
 
 pacman -S --noconfirm --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight
 
-pacman -S --noconfirm --disable-download-timeout --needed lollypop gedit evince-mobile epiphany gnome-clocks gnome-maps purple-matrix purple-telegram
+pacman -S --noconfirm --disable-download-timeout --needed lollypop gedit evince-mobile epiphany gnome-calculator gnome-clocks gnome-maps purple-matrix purple-telegram
 
 systemctl disable sshd
 
@@ -115,13 +117,14 @@ systemctl enable ModemManager
 systemctl enable phosh
 usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill alarm
 
-sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
+cp /etc/locale.gen-all /etc/locale.gen
 cd /usr/share/i18n/charmaps
 # locale-gen can't spawn gzip when running under qemu-user, so ungzip charmap before running it
 # and then gzip it back
 gzip -d UTF-8.gz
 locale-gen
 gzip UTF-8
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
 yes | pacman -Scc
 EOF
 chmod +x "$DEST/second-phase"
@@ -134,6 +137,7 @@ rm $DEST/change-alarm
 # Final touches
 rm "$DEST/usr/bin/qemu-aarch64-static"
 rm "$DEST/usr/bin/qemu-arm-static"
+rm "$DEST/etc/locale.gen-all"
 rm -f "$DEST"/*.core
 rm "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 touch "$DEST/etc/resolv.conf"
