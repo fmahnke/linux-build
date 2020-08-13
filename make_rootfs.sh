@@ -98,7 +98,7 @@ pacman -Syu --noconfirm
 pacman -Rsn --noconfirm linux-aarch64
 pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix danctnix-usb-tethering dhcp v4l-utils
 
-pacman -S --noconfirm --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight
+pacman -S --noconfirm --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight xdg-user-dirs
 
 pacman -S --noconfirm --disable-download-timeout --needed lollypop gedit evince-mobile epiphany gnome-calculator gnome-clocks gnome-maps purple-matrix purple-telegram
 
