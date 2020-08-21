@@ -100,7 +100,7 @@ pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw 
 
 pacman -S --noconfirm --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight xdg-user-dirs
 
-pacman -S --noconfirm --disable-download-timeout --needed lollypop gedit evince-mobile epiphany gnome-calculator gnome-clocks gnome-maps purple-matrix purple-telegram
+pacman -S --noconfirm --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps purple-matrix purple-telegram
 
 systemctl disable sshd
 
