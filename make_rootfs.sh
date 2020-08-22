@@ -103,7 +103,7 @@ pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
 pacman -Sy --noconfirm
 pacman -Rsn --noconfirm linux-aarch64
-pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone danctnix-usb-tethering dhcp
+pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone danctnix-usb-tethering dhcp sudo
 
 systemctl disable systemd-networkd
 systemctl disable systemd-resolved
@@ -115,7 +115,9 @@ systemctl enable bluetooth
 systemctl enable eg25_power
 systemctl enable eg25_audio_routing
 systemctl enable ModemManager
-usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill alarm
+usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill,wheel alarm
+
+sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 
 sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
 cd /usr/share/i18n/charmaps
