@@ -96,11 +96,11 @@ pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
 pacman -Syu --noconfirm
 pacman -Rsn --noconfirm linux-aarch64
-pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix danctnix-usb-tethering dhcp v4l-utils
+pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix danctnix-usb-tethering dhcp v4l-utils sudo
 
 pacman -S --noconfirm --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight xdg-user-dirs
 
-pacman -S --noconfirm --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps purple-matrix purple-telegram
+pacman -S --noconfirm --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps gnome-camera gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram
 
 systemctl disable sshd
 
@@ -115,7 +115,9 @@ systemctl enable eg25_power
 systemctl enable eg25_audio_routing
 systemctl enable ModemManager
 systemctl enable phosh
-usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill alarm
+usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill,wheel alarm
+
+sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 
 cp /etc/locale.gen-all /etc/locale.gen
 cd /usr/share/i18n/charmaps
