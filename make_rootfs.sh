@@ -89,6 +89,10 @@ cat $OTHERDIR/pacman.conf > "$DEST/etc/pacman.conf"
 
 cp $OTHERDIR/locale.gen "$DEST/etc/locale.gen-all"
 
+mv "$DEST/etc/pacman.d/mirrorlist" "$DEST/etc/pacman.d/mirrorlist.default"
+
+echo "Server = http://sg.mirror.archlinuxarm.org/\$arch/\$repo" > "$DEST/etc/pacman.d/mirrorlist"
+
 cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 pacman-key --init
@@ -100,7 +104,7 @@ pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw 
 
 pacman -S --noconfirm --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight xdg-user-dirs
 
-pacman -S --noconfirm --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps gnome-camera gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram
+pacman -S --noconfirm --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps pinhole gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram
 
 systemctl disable sshd
 
@@ -143,6 +147,9 @@ rm "$DEST/etc/locale.gen-all"
 rm -f "$DEST"/*.core
 rm "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 touch "$DEST/etc/resolv.conf"
+
+rm "$DEST/etc/pacman.d/mirrorlist"
+mv "$DEST/etc/pacman.d/mirrorlist.default" "$DEST/etc/pacman.d/mirrorlist"
 
 cp $OTHERDIR/resize_rootfs.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/first_time_setup.sh $DEST/usr/local/sbin/
