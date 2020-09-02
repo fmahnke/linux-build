@@ -101,9 +101,9 @@ cat > "$DEST/second-phase" <<EOF
 pacman-key --init
 pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
-pacman -Sy --noconfirm
+pacman -Syu --noconfirm --overwrite=*
 pacman -Rsn --noconfirm linux-aarch64
-pacman -S --noconfirm --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone danctnix-usb-tethering dhcp sudo
+pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone danctnix-usb-tethering dhcp sudo
 
 systemctl disable systemd-networkd
 systemctl disable systemd-resolved
