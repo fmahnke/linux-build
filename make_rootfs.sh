@@ -100,9 +100,9 @@ pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
 pacman -Syu --noconfirm --overwrite=*
 pacman -Rsn --noconfirm linux-aarch64
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix danctnix-usb-tethering dhcp v4l-utils sudo
+pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix v4l-utils sudo
 
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight xdg-user-dirs
+pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight xdg-user-dirs noto-fonts-emoji
 
 pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps pinhole gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram
 
@@ -111,8 +111,6 @@ systemctl disable sshd
 systemctl disable systemd-networkd
 systemctl disable systemd-resolved
 
-systemctl enable usb-tethering
-systemctl enable dhcpd4
 systemctl enable NetworkManager
 systemctl enable bluetooth
 systemctl enable eg25_power
