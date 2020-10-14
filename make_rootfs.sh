@@ -98,8 +98,8 @@ cat > "$DEST/second-phase" <<EOF
 pacman-key --init
 pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
-pacman -Syu --noconfirm --overwrite=*
 pacman -Rsn --noconfirm linux-aarch64
+pacman -Syu --noconfirm --overwrite=*
 pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix v4l-utils sudo
 
 pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight xdg-user-dirs noto-fonts-emoji
