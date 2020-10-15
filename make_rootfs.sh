@@ -98,8 +98,8 @@ cat > "$DEST/second-phase" <<EOF
 pacman-key --init
 pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
-pacman -Syu --noconfirm --overwrite=*
 pacman -Rsn --noconfirm linux-aarch64
+pacman -Syu --noconfirm --overwrite=*
 pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab bootsplash-theme-danctnix v4l-utils sudo
 
 pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji
@@ -145,6 +145,9 @@ touch "$DEST/etc/resolv.conf"
 
 rm "$DEST/etc/pacman.d/mirrorlist"
 mv "$DEST/etc/pacman.d/mirrorlist.default" "$DEST/etc/pacman.d/mirrorlist"
+
+sed -e '/default-sample-rate/idefault-sample-rate = 48000' -i "$DEST/etc/pulse/daemon.conf"
+sed -e '/alternate-sample-rate/ialternate-sample-rate = 8000' -i "$DEST/etc/pulse/daemon.conf"
 
 cp $OTHERDIR/resize_rootfs.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/first_time_setup.sh $DEST/usr/local/sbin/
