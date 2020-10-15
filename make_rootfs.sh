@@ -146,6 +146,9 @@ rm -f "$DEST"/*.core
 rm "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 touch "$DEST/etc/resolv.conf"
 
+sed -e '/default-sample-rate/idefault-sample-rate = 48000' -i "$DEST/etc/pulse/daemon.conf"
+sed -e '/alternate-sample-rate/ialternate-sample-rate = 8000' -i "$DEST/etc/pulse/daemon.conf"
+
 rm "$DEST/etc/pacman.d/mirrorlist"
 mv "$DEST/etc/pacman.d/mirrorlist.default" "$DEST/etc/pacman.d/mirrorlist"
 
