@@ -104,7 +104,7 @@ pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstoo
 
 pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta flashlight xdg-user-dirs noto-fonts-emoji
 
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram
+pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed epiphany-mobile lollypop gedit evince-mobile gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram
 
 systemctl disable sshd
 
@@ -155,10 +155,6 @@ mv "$DEST/etc/pacman.d/mirrorlist.default" "$DEST/etc/pacman.d/mirrorlist"
 cp $OTHERDIR/resize_rootfs.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/first_time_setup.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
-# Probing gdk pixbuf modules fails on qemu with:
-# (process:30790): GLib-ERROR **: 20:53:40.468: getauxval () failed: No such file or directory
-# qemu: uncaught target signal 5 (Trace/breakpoint trap) - core dumped
-#cp $OTHERDIR/loaders.cache $DEST//usr/lib/gdk-pixbuf-2.0/2.10.0/
 
 cp -r $OTHERDIR/systemd/* $DEST/usr/lib/systemd/
 
