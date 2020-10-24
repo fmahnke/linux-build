@@ -86,15 +86,7 @@ mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
 cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 sed -i 's|CheckSpace|#CheckSpace|' "$DEST/etc/pacman.conf"
 
-cat >> "$DEST/etc/pacman.conf" <<EOF
-[pine64]
-SigLevel = Never
-Server = https://p64.arikawa-hi.me/pine64/aarch64/
-
-[phosh]
-SigLevel = Never
-Server = https://p64.arikawa-hi.me/phosh/aarch64/
-EOF
+cat $OTHERDIR/pacman.conf > "$DEST/etc/pacman.conf"
 
 cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
