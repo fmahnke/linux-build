@@ -93,6 +93,8 @@ mv "$DEST/etc/pacman.d/mirrorlist" "$DEST/etc/pacman.d/mirrorlist.default"
 
 echo "Server = http://tw.mirror.archlinuxarm.org/\$arch/\$repo" > "$DEST/etc/pacman.d/mirrorlist"
 
+echo "danctnix" > "$DEST/etc/hostname"
+
 cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 pacman-key --init
@@ -104,7 +106,7 @@ pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstoo
 
 pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji
 
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed epiphany-mobile lollypop gedit evince-mobile gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram
+pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram
 
 systemctl disable sshd
 
