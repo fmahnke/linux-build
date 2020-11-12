@@ -88,6 +88,8 @@ sed -i 's|CheckSpace|#CheckSpace|' "$DEST/etc/pacman.conf"
 
 cat $OTHERDIR/pacman.conf > "$DEST/etc/pacman.conf"
 
+echo "danctnix" > "$DEST/etc/hostname"
+
 cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 pacman-key --init
