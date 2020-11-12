@@ -5,11 +5,11 @@ rootfs-$(RELEASE_NAME).tar.gz:
 
 archlinux-pinetab-$(RELEASE_NAME).img: rootfs-$(RELEASE_NAME).tar.gz
 	./make_empty_image.sh $@
-	./make_image.sh $@ $< u-boot-sunxi-with-spl-pinetab-624.bin
+	./make_image.sh $@ $< u-boot-sunxi-with-spl-pinetab-552.bin
 
 archlinux-pinephone-$(RELEASE_NAME).img: rootfs-$(RELEASE_NAME).tar.gz
 	./make_empty_image.sh $@
-	./make_image.sh $@ $< u-boot-sunxi-with-spl-pinephone-624.bin
+	./make_image.sh $@ $< u-boot-sunxi-with-spl-pinephone-552.bin
 
 .PHONY: archlinux-pinetab archlinux-pinephone
 archlinux-pinetab: archlinux-pinetab-$(RELEASE_NAME).img

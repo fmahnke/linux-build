@@ -91,7 +91,7 @@ cp $OTHERDIR/locale.gen "$DEST/etc/locale.gen-all"
 
 mv "$DEST/etc/pacman.d/mirrorlist" "$DEST/etc/pacman.d/mirrorlist.default"
 
-echo "Server = http://tw.mirror.archlinuxarm.org/\$arch/\$repo" > "$DEST/etc/pacman.d/mirrorlist"
+echo "Server = http://sg.mirror.archlinuxarm.org/\$arch/\$repo" > "$DEST/etc/pacman.d/mirrorlist"
 
 echo "danctnix" > "$DEST/etc/hostname"
 
