@@ -12,22 +12,25 @@ set -x
 DEVICE=$(df -P $0 | tail -1 | cut -d' ' -f 1 | sed 's/..$//')
 
 resize() {
+	start=$(fdisk -l ${DEVICE} | grep ${DEVICE}p2 | sed 's/*//' | awk '{print $2}')
+	echo $start
+
 	set +e
 	fdisk ${DEVICE} <<EOF
 p
 d
+2
 n
 p
-1
-2048
+2
+$start
 
-a
 w
 EOF
 	set -e
 
 	partx -u ${DEVICE}
-	resize2fs ${DEVICE}p1
+	resize2fs ${DEVICE}p2
 }
 
 resize
