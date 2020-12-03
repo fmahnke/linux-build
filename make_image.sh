@@ -23,7 +23,7 @@ losetup -P $LOOP_DEVICE $IMAGE_NAME
 
 echo "Creating filesystems"
 mkfs.vfat ${LOOP_DEVICE}p1
-mkfs.ext4 ${LOOP_DEVICE}p2
+mkfs.f2fs ${LOOP_DEVICE}p2
 
 TEMP_ROOT=$(mktemp -d)
 mkdir -p $TEMP_ROOT
