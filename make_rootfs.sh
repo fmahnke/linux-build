@@ -97,7 +97,7 @@ pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
 pacman -Rsn --noconfirm linux-aarch64
 pacman -Syu --noconfirm --overwrite=*
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab danctnix-usb-tethering dhcp sudo
+pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab danctnix-usb-tethering dhcp sudo f2fs-tools
 
 systemctl disable systemd-networkd
 systemctl disable systemd-resolved
@@ -133,7 +133,6 @@ rm -f "$DEST"/*.core
 rm "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 touch "$DEST/etc/resolv.conf"
 
-cp $OTHERDIR/resize_rootfs.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/first_time_setup.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
 # Probing gdk pixbuf modules fails on qemu with:
@@ -142,6 +141,11 @@ cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
 #cp $OTHERDIR/loaders.cache $DEST//usr/lib/gdk-pixbuf-2.0/2.10.0/
 
 cp -r $OTHERDIR/systemd/* $DEST/usr/lib/systemd/system/
+
+cp $OTHERDIR/mkinitcpio.conf $DEST/etc/mkinitcpio.conf
+cp $OTHERDIR/mkinitcpio-hooks/resizerootfs-hooks $DEST/usr/lib/initcpio/hooks/resizerootfs
+cp $OTHERDIR/mkinitcpio-hooks/resizerootfs-install $DEST/usr/lib/initcpio/install/resizerootfs
+do_chroot mkinitcpio -p linux-pine64
 
 # Shiny MOTD
 cp $OTHERDIR/motd $DEST/etc/motd
