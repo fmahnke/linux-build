@@ -102,7 +102,7 @@ pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
 pacman -Rsn --noconfirm linux-aarch64
 pacman -Syu --noconfirm --overwrite=*
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab bootsplash-theme-danctnix v4l-utils sudo
+pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab bootsplash-theme-danctnix v4l-utils sudo f2fs-tools
 
 pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good
 
@@ -151,7 +151,6 @@ mv "$DEST/etc/pacman.d/mirrorlist.default" "$DEST/etc/pacman.d/mirrorlist"
 sed -e '/default-sample-rate/idefault-sample-rate = 48000' -i "$DEST/etc/pulse/daemon.conf"
 sed -e '/alternate-sample-rate/ialternate-sample-rate = 8000' -i "$DEST/etc/pulse/daemon.conf"
 
-cp $OTHERDIR/resize_rootfs.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/first_time_setup.sh $DEST/usr/local/sbin/
 cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
 
@@ -165,7 +164,9 @@ do_chroot /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
 # Replace Arch's with our own mkinitcpio
 rm $DEST/etc/mkinitcpio.conf
 cp $OTHERDIR/mkinitcpio.conf $DEST/etc/mkinitcpio.conf
-do_chroot mkinitcpio -p linux-pine64 || true
+cp $OTHERDIR/mkinitcpio-hooks/resizerootfs-hooks $DEST/usr/lib/initcpio/hooks/resizerootfs
+cp $OTHERDIR/mkinitcpio-hooks/resizerootfs-install $DEST/usr/lib/initcpio/install/resizerootfs
+do_chroot mkinitcpio -p linux-pine64
 
 # Shiny MOTD
 cp $OTHERDIR/motd $DEST/etc/motd
