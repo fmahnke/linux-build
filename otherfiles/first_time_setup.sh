@@ -13,19 +13,6 @@
 
 # If you need anything else, please @ me on pinedev IRC/Matrix.
 
-DT_MODEL=$(< /sys/firmware/devicetree/base/model)
-
-if [[ $DT_MODEL =~ "PinePhone" ]]; then
-	echo "This is a PinePhone"
-	echo "CHASSIS=\"handset\"" > /etc/machine-info
-elif [[ $DT_MODEL =~ "PineTab" ]]; then
-	echo "This is a PineTab."
-	echo "CHASSIS=\"tablet\"" > /etc/machine-info
-else
-	echo "Cannot identify this device, this might not be a PinePhone/PineTab."
-	exit 1 # End the script, because the user is probably running it on a x86 computer
-fi
-
 # Resize the rootfs
 sed -i 's/resizerootfs//g' /etc/mkinitcpio.conf
 mkinitcpio -p linux-pine64
