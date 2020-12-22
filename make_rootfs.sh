@@ -102,17 +102,18 @@ pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
 pacman -Rsn --noconfirm linux-aarch64
 pacman -Syu --noconfirm --overwrite=*
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix v4l-utils sudo f2fs-tools
+pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix v4l-utils sudo f2fs-tools zramswap
 
 pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good
 
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram
+pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram portfolio-fm
 
 systemctl disable sshd
 
 systemctl disable systemd-networkd
 systemctl disable systemd-resolved
 
+systemctl enable zramswap
 systemctl enable NetworkManager
 systemctl enable bluetooth
 systemctl enable eg25_power
