@@ -32,12 +32,16 @@ elif [ "$ROOTFS_PRESET" = "pinetab-phosh" ]; then
 elif [ "$ROOTFS_PRESET" = "pinephone-barebone" ]; then
 	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone danctnix-usb-tethering dhcp sudo f2fs-tools zramswap"
 	POST_INSTALL="
+		systemctl enable sshd
 		systemctl enable eg25_power
 		systemctl enable eg25_audio_routing
 	"
 
 elif [ "$ROOTFS_PRESET" = "pinetab-barebone" ]; then
 	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab danctnix-usb-tethering dhcp sudo f2fs-tools zramswap"
+	POST_INSTALL="
+		systemctl enable sshd
+	"
 
 fi
 
