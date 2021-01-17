@@ -6,12 +6,45 @@ BUILD="build"
 OTHERDIR="otherfiles"
 DEST="$1"
 OUT_TARBALL="$2"
+ROOTFS_PRESET="$3"
 BUILD_ARCH=arm64
+
+# All the presets
+if [ "$ROOTFS_PRESET" = "pinephone-phosh" ]; then
+	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix v4l-utils sudo f2fs-tools zramswap"
+	PACKAGES_UI="mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram portfolio-fm"
+	POST_INSTALL="
+		systemctl enable bluetooth
+		systemctl enable eg25_power
+		systemctl enable eg25_audio_routing
+		systemctl enable ModemManager
+		systemctl enable phosh
+	"
+
+elif [ "$ROOTFS_PRESET" = "pinetab-phosh" ]; then
+	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab bootsplash-theme-danctnix v4l-utils sudo f2fs-tools zramswap"
+	PACKAGES_UI="mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram portfolio-fm"
+	POST_INSTALL="
+		systemctl enable bluetooth
+		systemctl enable phosh
+	"
+
+elif [ "$ROOTFS_PRESET" = "pinephone-barebone" ]; then
+	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone danctnix-usb-tethering dhcp sudo f2fs-tools zramswap"
+	POST_INSTALL="
+		systemctl enable eg25_power
+		systemctl enable eg25_audio_routing
+	"
+
+elif [ "$ROOTFS_PRESET" = "pinetab-barebone" ]; then
+	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab danctnix-usb-tethering dhcp sudo f2fs-tools zramswap"
+
+fi
 
 export LC_ALL=C
 
-if [ -z "$DEST" ] || [ -z "$OUT_TARBALL" ]; then
-	echo "Usage: $0 <destination-folder> <destination-tarball>"
+if [ -z "$DEST" ] || [ -z "$OUT_TARBALL"  ] || [ -z "$ROOTFS_PRESET"  ]; then
+	echo "Usage: $0 <destination-folder> <destination-tarball> <rootfs-preset>"
 	exit 1
 fi
 
@@ -87,7 +120,12 @@ cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 
 cat $OTHERDIR/pacman.conf > "$DEST/etc/pacman.conf"
 
-cp $OTHERDIR/locale.gen "$DEST/etc/locale.gen-all"
+if [[ "$ROOTFS_PRESET" = *"barebone"* ]]; then
+	# Barebone doesn't need more than en_US.
+	echo "en_US.UTF-8 UTF-8" > "$DEST/etc/locale.gen-all"
+else
+	cp $OTHERDIR/locale.gen "$DEST/etc/locale.gen-all"
+fi
 
 mv "$DEST/etc/pacman.d/mirrorlist" "$DEST/etc/pacman.d/mirrorlist.default"
 
@@ -102,11 +140,7 @@ pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
 pacman -Rsn --noconfirm linux-aarch64
 pacman -Syu --noconfirm --overwrite=*
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix v4l-utils sudo f2fs-tools zramswap
-
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good
-
-pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram portfolio-fm
+pacman -S --noconfirm --overwrite=* --disable-download-timeout --needed $PACKAGES_BASE $PACKAGES_UI
 
 systemctl disable sshd
 
@@ -115,12 +149,9 @@ systemctl disable systemd-resolved
 
 systemctl enable zramswap
 systemctl enable NetworkManager
-systemctl enable bluetooth
-systemctl enable eg25_power
-systemctl enable eg25_audio_routing
-systemctl enable ModemManager
-systemctl enable phosh
 usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill,wheel alarm
+
+$POST_INSTALL
 
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 
@@ -149,9 +180,6 @@ rm -f "$DEST"/*.core
 rm "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 touch "$DEST/etc/resolv.conf"
 
-sed -e '/default-sample-rate/idefault-sample-rate = 48000' -i "$DEST/etc/pulse/daemon.conf"
-sed -e '/alternate-sample-rate/ialternate-sample-rate = 8000' -i "$DEST/etc/pulse/daemon.conf"
-
 rm "$DEST/etc/pacman.d/mirrorlist"
 mv "$DEST/etc/pacman.d/mirrorlist.default" "$DEST/etc/pacman.d/mirrorlist"
 
@@ -160,8 +188,10 @@ cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
 
 cp -r $OTHERDIR/systemd/* $DEST/usr/lib/systemd/
 
-mkdir -p $DEST/etc/gtk-3.0
-cp $OTHERDIR/gtk3-settings.ini $DEST/etc/gtk-3.0/settings.ini
+install -Dm644 /dev/stdin "$pkgdir/etc/gtk-3.0/settings.ini" <<END
+[Settings]
+gtk-application-prefer-dark-theme=1
+END
 
 do_chroot /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
 
@@ -170,6 +200,12 @@ rm $DEST/etc/mkinitcpio.conf
 cp $OTHERDIR/mkinitcpio.conf $DEST/etc/mkinitcpio.conf
 cp $OTHERDIR/mkinitcpio-hooks/resizerootfs-hooks $DEST/usr/lib/initcpio/hooks/resizerootfs
 cp $OTHERDIR/mkinitcpio-hooks/resizerootfs-install $DEST/usr/lib/initcpio/install/resizerootfs
+
+if [[ "$ROOTFS_PRESET" = *"barebone"* ]]; then
+	# Barebone does not come with splash.
+	sed -i 's/bootsplash-danctnix//g' $DEST/etc/mkinitcpio.conf
+fi
+
 do_chroot mkinitcpio -p linux-pine64
 
 # Shiny MOTD

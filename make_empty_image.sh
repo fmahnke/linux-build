@@ -4,9 +4,9 @@ set -x
 set -e
 
 IMAGE_NAME="$1"
-IMAGE_SIZE=4096M
+IMAGE_SIZE="$2"
 
-if [ -z "$IMAGE_NAME" ]; then
+if [ -z "$IMAGE_NAME" ] || [ -z "$IMAGE_SIZE" ]; then
 	echo "Usage: $0 <image name>"
 	exit 1
 fi
