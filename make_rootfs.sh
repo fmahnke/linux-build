@@ -196,7 +196,7 @@ cp $OTHERDIR/81-blueman.rules $DEST/etc/polkit-1/rules.d/
 
 cp -r $OTHERDIR/systemd/* $DEST/usr/lib/systemd/
 
-install -Dm644 /dev/stdin "$pkgdir/etc/gtk-3.0/settings.ini" <<END
+install -Dm644 /dev/stdin "$DEST/etc/gtk-3.0/settings.ini" <<END
 [Settings]
 gtk-application-prefer-dark-theme=1
 END
