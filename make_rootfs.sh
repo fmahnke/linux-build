@@ -12,7 +12,7 @@ BUILD_ARCH=arm64
 # All the presets
 if [ "$ROOTFS_PRESET" = "pinephone-phosh" ]; then
 	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix v4l-utils sudo f2fs-tools zramswap"
-	PACKAGES_UI="mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram portfolio-fm"
+	PACKAGES_UI="mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram portfolio-fm calls chatty kgx gnome-software-mobile gnome-contacts-mobile gnome-initial-setup-mobile"
 	POST_INSTALL="
 		systemctl enable bluetooth
 		systemctl enable eg25_power
@@ -23,7 +23,7 @@ if [ "$ROOTFS_PRESET" = "pinephone-phosh" ]; then
 
 elif [ "$ROOTFS_PRESET" = "pinetab-phosh" ]; then
 	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab bootsplash-theme-danctnix v4l-utils sudo f2fs-tools zramswap"
-	PACKAGES_UI="mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram portfolio-fm"
+	PACKAGES_UI="mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram portfolio-fm chatty kgx gnome-software-mobile gnome-contacts-mobile gnome-initial-setup-mobile"
 	POST_INSTALL="
 		systemctl enable bluetooth
 		systemctl enable phosh
