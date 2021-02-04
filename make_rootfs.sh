@@ -13,41 +13,25 @@ BUILD_ARCH=arm64
 if [ "$ROOTFS_PRESET" = "pinephone-phosh" ]; then
 	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix v4l-utils sudo f2fs-tools zramswap"
 	PACKAGES_UI="mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram portfolio-fm calls chatty kgx gnome-software-mobile gnome-contacts-mobile gnome-initial-setup-mobile"
-	POST_INSTALL="
-		systemctl enable bluetooth
-		systemctl enable eg25_power
-		systemctl enable eg25_audio_routing
-		systemctl enable ModemManager
-		systemctl enable phosh
-	"
+	SERVICES_ENABLED="${PINEPHONE_PHOSH_SERVICES_ENABLED:-bluetooth eg25_power eg25_audio_routing ModemManager phosh}"
 
 elif [ "$ROOTFS_PRESET" = "pinetab-phosh" ]; then
 	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab bootsplash-theme-danctnix v4l-utils sudo f2fs-tools zramswap"
 	PACKAGES_UI="mesa-git danctnix-phosh-ui-meta xdg-user-dirs noto-fonts-emoji gst-plugins-good lollypop gedit evince-mobile mobile-config-firefox gnome-calculator gnome-clocks gnome-maps megapixels gnome-usage-mobile gtherm geary-mobile purple-matrix purple-telegram portfolio-fm chatty kgx gnome-software-mobile gnome-contacts-mobile gnome-initial-setup-mobile"
-	POST_INSTALL="
-		systemctl enable bluetooth
-		systemctl enable phosh
-	"
+	SERVICES_ENABLED="${PINETAB_PHOSH_SERVICES_ENABLED:-bluetooth phosh}"
 
 elif [ "$ROOTFS_PRESET" = "pinephone-barebone" ]; then
 	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone danctnix-usb-tethering dhcp sudo f2fs-tools zramswap"
-	POST_INSTALL="
-		systemctl enable usb-tethering
-		systemctl enable dhcpd4
-		systemctl enable sshd
-		systemctl enable eg25_power
-		systemctl enable eg25_audio_routing
-	"
+	SERVICES_ENABLED="${PINEPHONE_BAREBONE_SERVICES_ENABLED:-usb-tethering dhcpd4 sshd eg25_power eg25_audio_routing}"
 
 elif [ "$ROOTFS_PRESET" = "pinetab-barebone" ]; then
 	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinetab danctnix-usb-tethering dhcp sudo f2fs-tools zramswap"
-	POST_INSTALL="
-		systemctl enable usb-tethering
-		systemctl enable dhcpd4
-		systemctl enable sshd
-	"
-
+	SERVICES_ENABLED="${PINETAB_BAREBONE_SERVICES_ENABLED:-usb-tethering dhcpd4 sshd}"
 fi
+
+for i in $SERVICES_ENABLED; do
+    POST_INSTALL="$POST_INSTALL""systemctl enable $i"$'\n'
+done
 
 export LC_ALL=C
 
