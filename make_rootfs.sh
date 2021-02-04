@@ -119,7 +119,11 @@ if [[ "$ROOTFS_PRESET" = *"barebone"* ]]; then
 	# Barebone doesn't need more than en_US.
 	echo "en_US.UTF-8 UTF-8" > "$DEST/etc/locale.gen-all"
 else
-	cp $OTHERDIR/locale.gen "$DEST/etc/locale.gen-all"
+	if [ -z "$LOCALE_GEN" ]; then
+		cp $OTHERDIR/locale.gen "$DEST/etc/locale.gen-all"
+	else
+		echo "$LOCALE_GEN" > "$DEST/etc/locale.gen-all"
+	fi
 fi
 
 mv "$DEST/etc/pacman.d/mirrorlist" "$DEST/etc/pacman.d/mirrorlist.default"
