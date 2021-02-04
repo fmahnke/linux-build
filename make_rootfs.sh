@@ -9,6 +9,8 @@ OUT_TARBALL="$2"
 ROOTFS_PRESET="$3"
 BUILD_ARCH=arm64
 
+PACMAN_MIRROR="${PACMAN_MIRROR:-http://sg.mirror.archlinuxarm.org/\$arch/\$repo}"
+
 # All the presets
 if [ "$ROOTFS_PRESET" = "pinephone-phosh" ]; then
 	PACKAGES_BASE="dosfstools curl xz iw rfkill netctl dialog wpa_supplicant pv networkmanager device-pine64-pinephone bootsplash-theme-danctnix v4l-utils sudo f2fs-tools zramswap"
@@ -121,7 +123,7 @@ fi
 
 mv "$DEST/etc/pacman.d/mirrorlist" "$DEST/etc/pacman.d/mirrorlist.default"
 
-echo "Server = http://sg.mirror.archlinuxarm.org/\$arch/\$repo" > "$DEST/etc/pacman.d/mirrorlist"
+echo "Server = $PACMAN_MIRROR" > "$DEST/etc/pacman.d/mirrorlist"
 
 echo "danctnix" > "$DEST/etc/hostname"
 
