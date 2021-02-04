@@ -9,6 +9,7 @@ OUT_TARBALL="$2"
 ROOTFS_PRESET="$3"
 BUILD_ARCH=arm64
 
+HOSTNAME="${HOSTNAME:-danctnix}"
 PACMAN_MIRROR="${PACMAN_MIRROR:-http://sg.mirror.archlinuxarm.org/\$arch/\$repo}"
 
 # All the presets
@@ -125,7 +126,7 @@ mv "$DEST/etc/pacman.d/mirrorlist" "$DEST/etc/pacman.d/mirrorlist.default"
 
 echo "Server = $PACMAN_MIRROR" > "$DEST/etc/pacman.d/mirrorlist"
 
-echo "danctnix" > "$DEST/etc/hostname"
+echo "$HOSTNAME" > "$DEST/etc/hostname"
 
 cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
