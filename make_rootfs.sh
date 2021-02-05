@@ -98,12 +98,11 @@ cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"
 cp /usr/bin/qemu-arm-static "$DEST/usr/bin"
 
 do_chroot() {
-	cmd="$@"
 	mount -o bind /tmp "$DEST/tmp"
 	mount -o bind /dev "$DEST/dev"
 	chroot "$DEST" mount -t proc proc /proc
 	chroot "$DEST" mount -t sysfs sys /sys
-	chroot "$DEST" $cmd
+	chroot "$DEST" "$@"
 	chroot "$DEST" umount /sys
 	chroot "$DEST" umount /proc
 	umount "$DEST/dev"
@@ -162,11 +161,21 @@ gzip -d UTF-8.gz
 locale-gen
 gzip UTF-8
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
-yes | pacman -Scc
 EOF
+
 chmod +x "$DEST/second-phase"
 cp $OTHERDIR/change-alarm $DEST/
+
+[ -z "$PACMAN_CACHE" ] || mkdir -p "$PACMAN_CACHE" && \
+    ls "$PACMAN_CACHE" | \
+    xargs -I {} cp "$PACMAN_CACHE/{}" "$DEST/var/cache/pacman/pkg"
+
 do_chroot /second-phase
+
+[ -z "$PACMAN_CACHE" ] || cp "$DEST"/var/cache/pacman/pkg/* "$PACMAN_CACHE"
+
+do_chroot /bin/sh -c "yes | pacman -Scc"
+
 do_chroot /change-alarm
 rm $DEST/second-phase
 rm $DEST/change-alarm
